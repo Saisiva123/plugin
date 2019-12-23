@@ -1,0 +1,65 @@
+(function($)
+{
+	var x=[0,0,0];
+	$.fn.stepper=function(){
+	$div=$("<ul></ul>");
+	$div.html("<li>step 1</li><li>step 2</li><li>Step 3</li");
+	$("#container").prepend($div);
+	$div.prop("id","unorderList");
+	$div.children().each(
+		function()
+		{
+			$(this).prop("id","list");
+		});
+	$("#list:nth-child(2)").click(function()
+	{
+		if(x[0]==1)
+		{
+			$(".one").css("display","none");
+		    $(".two").css("display","block");
+		    $(".three").css("display","none");
+		}
+	});
+	$("#list:nth-child(1)").click(function()
+	{
+		
+			$(".one").css("display","block");
+		    $(".two").css("display","none");
+		    $(".three").css("display","none");
+	});
+	$("#list:last-child").click(function()
+	{
+		if(x[1]==1)
+		{
+			$(".one").css("display","none");
+		    $(".two").css("display","none");
+		    $(".three").css("display","block");
+		}
+	});
+	$("#submitone").click(function()
+	{
+		x[0]=1;
+		if($("#fname").val()!="" && $("#lname").val()!="" && $("#number").val()!=""&& $("#email").val()!="")
+        {
+	    $(".one").css("display","none");
+		$(".two").css("display","block");
+		$("#list:first-child").css("background-color","blue");
+        }
+	});
+	$("#submittwo").click(function()
+	{
+		x[1]=1;
+		if($("#username1").val()!="" && $("#password1").val()!="")
+        {
+	    $(".two").css("display","none");
+		$(".three").css("display","block");
+		$("#list:nth-child(2)").css("background-color","blue");
+        }
+	});
+	$("#submitthree").click(function()
+	{
+		x[2]=1;
+		$("#list:last-child").css("background-color","blue");
+	});
+};
+}(jQuery));
