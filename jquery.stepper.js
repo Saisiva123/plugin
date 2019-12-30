@@ -1,65 +1,98 @@
-(function($)
-{
-	var x=[0,0,0];
-	$.fn.stepper=function(){
-	$div=$("<ul></ul>");
-	$div.html("<li>step 1</li><li>step 2</li><li>Step 3</li");
-	$("#container").prepend($div);
-	$div.prop("id","unorderList");
-	$div.children().each(
-		function()
-		{
-			$(this).prop("id","list");
+(function ($) {
+	var x = [];
+	$.fn.stepper = function (options) {
+		var settings = $.extend(
+			{
+				defaultcolor: "grey",
+				completioncolor: "green",
+				steps: ["step 1", "step 2", "step 3"]
+			},
+			options
+		);
+		$div = $("<ul></ul>");
+		$(this).prepend($div);
+		$count = settings.steps.length;
+
+		for (i = 0; i < $count; i++) {
+			x[i] = 0;
+			$div.append("<li></li>");
+			$div
+				.children()
+				.eq(i)
+				.text(settings.steps[i]);
+		}
+		for (i = 0; i < $count; i++) {
+			console.log(x[i]);
+		}
+		$div.prop("id", "unorderList");
+		$div.children().each(function () {
+			$(this).prop("id", "list");
 		});
-	$("#list:nth-child(2)").click(function()
-	{
-		if(x[0]==1)
-		{
-			$(".one").css("display","none");
-		    $(".two").css("display","block");
-		    $(".three").css("display","none");
+		$(this)
+			.children("div")
+			.each(function () {
+				$(this).addClass("form");
+			});
+
+		if (x[0] == 0) {
+			$(".form")
+				.eq(0)
+				.css("display", "block");
 		}
-	});
-	$("#list:nth-child(1)").click(function()
-	{
-		
-			$(".one").css("display","block");
-		    $(".two").css("display","none");
-		    $(".three").css("display","none");
-	});
-	$("#list:last-child").click(function()
-	{
-		if(x[1]==1)
-		{
-			$(".one").css("display","none");
-		    $(".two").css("display","none");
-		    $(".three").css("display","block");
-		}
-	});
-	$("#submitone").click(function()
-	{
-		x[0]=1;
-		if($("#fname").val()!="" && $("#lname").val()!="" && $("#number").val()!=""&& $("#email").val()!="")
-        {
-	    $(".one").css("display","none");
-		$(".two").css("display","block");
-		$("#list:first-child").css("background-color","blue");
-        }
-	});
-	$("#submittwo").click(function()
-	{
-		x[1]=1;
-		if($("#username1").val()!="" && $("#password1").val()!="")
-        {
-	    $(".two").css("display","none");
-		$(".three").css("display","block");
-		$("#list:nth-child(2)").css("background-color","blue");
-        }
-	});
-	$("#submitthree").click(function()
-	{
-		x[2]=1;
-		$("#list:last-child").css("background-color","blue");
-	});
-};
-}(jQuery));
+
+		$("#unorderList")
+			.children()
+			.each(function () {
+				$(this).click(function () {
+					$num = $count - $(this).nextAll().length;
+					console.log($num);
+					if (x[$num - 2] == 1 || x[$num - 1] == 1) {
+						$(this)
+							.parent("#unorderList")
+							.siblings("div")
+							.css("display", "none");
+						$(this)
+							.parent("#unorderList")
+							.siblings("div")
+							.eq($num - 1)
+							.css("display", "block");
+					}
+				});
+			});
+
+		$("input[type=submit]").click(function () {
+			$("input[type=text]")
+				.filter("[required]")
+				.each(function () {
+					if ($(this).val() != "") {
+						$noofpresentform =
+							$count -
+							$(this)
+								.parents()
+								.filter(".form")
+								.nextAll().length;
+						x[$noofpresentform - 1] = 1;
+
+						console.log($noofpresentform);
+						if (
+							$(this)
+								.parents()
+								.filter(".form")
+								.next().length > 0
+						) {
+							$(this)
+								.parents()
+								.filter(".form")
+								.css("display", "none");
+							$(this)
+								.parents()
+								.filter(".form")
+								.next()
+								.css("display", "block");
+						}
+						$("#list:nth-child(" + $noofpresentform + ")").addClass("special");
+					}
+				});
+		});
+	};
+})(jQuery);
