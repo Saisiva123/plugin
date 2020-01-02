@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 
 <head>
-
-	<link rel="stylesheet" type="text/css" href="stepperStyle.css">
+	<link rel="stylesheet" type="text/css" href="jquery.stepper.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="jquery.stepper.js" type="text/javascript"></script>
-	<script type="text/javascript">
-		$(document).ready(
-			function () {
-				$("#container").stepper({
-					defaultcolor: 'grey',
-					completioncolor: 'green',
-					//if new form is created the the step has to be added.
-					steps: ['first', 'second', 'third']
-				});
-			});
-	</script>
+	<script src="main.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -23,31 +12,39 @@
 		<div>
 			<h1 style="text-align: center;">Contact form</h1>
 			<div style="text-align:center">
-				<label>First Name</label><br><input type="text" required></span><br>
-				<label>Last Name</label><br><input type="text" required></span><br>
-				<label>Phone Number</label><br><input type="text" required></span><br>
-				<label>Email</label><br><input type="text" required></span><br>
-				<input type="submit" id="submitone">
+				<label>First Name</label><br><input type="text" ></span><br>
+				<label>Last Name</label><br><input type="text" ></span><br>
+				<label>Phone Number</label><br><input type="text" ></span><br>
+				<label>Email</label><br><input type="text" ></span><br>
+				<input type="submit" >
 			</div>
 		</div>
 		<div>
 			<h1 style="text-align: center;">Login form</h1>
 			<div style="text-align:center">
-				<label>UserName</label><br><input type="text" required></span><br>
-				<label>Password</label><br><input type="text" required></span><br>
-				<input type="submit">
+				<label>UserName</label><br><input type="text" ></span><br>
+				<label>Password</label><br><input type="text" ></span><br>
+				<button>Submit</button>
 			</div>
 		</div>
 		<div>
 			<h1 style="text-align: center;">Register form</h1>
 			<div style="text-align:center">
-				<label>Name</label><br><input type="text" required></span><br>
-				<label>UserName</label><br><input type="text" required></span><br>
-				<label>Password</label><br><input type="text" required></span><br>
+				<label>Name</label><br><input type="text" ></span><br>
+				<label>UserName</label><br><input type="text" ></span><br>
+				<label>Password</label><br><input type="text" ></span><br>
 				<input type="submit">
 			</div>
 		</div>
-	
+		<div>
+			<h1 style="text-align: center;">SignIn form</h1>
+			<div style="text-align:center">
+				<label>Name</label><br><input type="text" ></span><br>
+				<label>UserName</label><br><input type="text" ></span><br>
+				<label>Password</label><br><input type="text" ></span><br>
+				<input type="submit">
+			</div>
+		</div>
 	</div>
 </body>
 

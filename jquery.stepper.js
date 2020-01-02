@@ -1,98 +1,94 @@
 (function ($) {
-	var x = [];
-	$.fn.stepper = function (options) {
-		var settings = $.extend(
-			{
-				defaultcolor: "grey",
-				completioncolor: "green",
-				steps: ["step 1", "step 2", "step 3"]
-			},
-			options
-		);
-		$div = $("<ul></ul>");
-		$(this).prepend($div);
-		$count = settings.steps.length;
+  $.fn.stepper = function (options) {
+    var x = [];
+    var container = $(this);
+    var settings = $.extend(
+      {
+        stepperbgcolor: 'bgcolor',
+        steppercompletioncolor: 'completioncolor',
+        stepperprocesscolor: 'processcolor',
+        steps: ['first', 'second', 'third', 'fourth'],
+        stepButtonContent: ["o", "#", "$", "*"],
+        pagebuttons: ['Prev Page', 'Next Page'],
+        startingindex: '2',
 
-		for (i = 0; i < $count; i++) {
-			x[i] = 0;
-			$div.append("<li></li>");
-			$div
-				.children()
-				.eq(i)
-				.text(settings.steps[i]);
-		}
-		for (i = 0; i < $count; i++) {
-			console.log(x[i]);
-		}
-		$div.prop("id", "unorderList");
-		$div.children().each(function () {
-			$(this).prop("id", "list");
-		});
-		$(this)
-			.children("div")
-			.each(function () {
-				$(this).addClass("form");
-			});
+      },
+      options
+    );
+    //all varibles which been used
+    var buttons = $("input[type=submit],button,select");
+    var initialstep = settings.startingindex - 1;
+    $stepperMain = $("<ul></ul>").addClass("stepperBody");
+    container.prepend($stepperMain);
+    $count = settings.steps.length;
 
-		if (x[0] == 0) {
-			$(".form")
-				.eq(0)
-				.css("display", "block");
-		}
+    //set content,classes for lists and buttons
+    for (i = 0; i < $count; i++) {
+      x[i] = 0;
+      $stepperMain.append(createList(i));
+    }
 
-		$("#unorderList")
-			.children()
-			.each(function () {
-				$(this).click(function () {
-					$num = $count - $(this).nextAll().length;
-					console.log($num);
-					if (x[$num - 2] == 1 || x[$num - 1] == 1) {
-						$(this)
-							.parent("#unorderList")
-							.siblings("div")
-							.css("display", "none");
-						$(this)
-							.parent("#unorderList")
-							.siblings("div")
-							.eq($num - 1)
-							.css("display", "block");
-					}
-				});
-			});
+    for (i = 0; i < settings.pagebuttons.length; i++) {
+      container.append($("<button></button").text(settings.pagebuttons[i]).addClass("pageButtons"));
+    }
 
-		$("input[type=submit]").click(function () {
-			$("input[type=text]")
-				.filter("[required]")
-				.each(function () {
-					if ($(this).val() != "") {
-						$noofpresentform =
-							$count -
-							$(this)
-								.parents()
-								.filter(".form")
-								.nextAll().length;
-						x[$noofpresentform - 1] = 1;
+    //list created and classes were added
+    function createList(i) {
+      return $("<li></li>").addClass('stepperList' + ' ' + settings.stepperbgcolor).text(settings.steps[i]).attr("content", settings.stepButtonContent[i]);
+    }
+    container.children().not(".stepperBody,.pageButtons").addClass("form");
+    //initially notvisited 
+    for (i = initialstep; i < $count; i++) {
+      $(".stepperList").eq(i).addClass("notvisited");
+    }
+    //for active class
+    $(".stepperList").eq(initialstep).addClass("current" +' '+ settings.stepperprocesscolor).removeClass("notvisited");
+    $(".form").eq(initialstep).show();
+    //initially first form and stepperList will be active
 
-						console.log($noofpresentform);
-						if (
-							$(this)
-								.parents()
-								.filter(".form")
-								.next().length > 0
-						) {
-							$(this)
-								.parents()
-								.filter(".form")
-								.css("display", "none");
-							$(this)
-								.parents()
-								.filter(".form")
-								.next()
-								.css("display", "block");
-						}
-						$("#list:nth-child(" + $noofpresentform + ")").addClass("special");
-					}
-				});
-		});
-	};
+    $(".stepperList").click(function () {
+      $num = $(this).index();
+      console.log($num);
+      $(this).addClass("current").removeClass("isnotvisited");
+      if (($(this).hasClass("current") && $(this).prev().hasClass('visited')) || $(this).hasClass("visited")) {
+        $(".form").hide();
+        $(".form").eq($num).show();
+      }
+    });
+
+    $(".pageButtons").eq(0).click(function()
+    {
+        $index=$(".current").index();
+        console.log($index);
+        if($(".form").eq($index))
+        {
+         // $index=$(this).index();
+        }
+    });
+
+    //when the buttons clicked
+
+    buttons.click(function () {
+      var buttonclick = $(this);
+      $index = buttonclick 
+        .parents(".form")
+        .index();
+    
+      if ($index < $count) {
+     $(".form").eq($index-1)
+         .hide();
+     $(".stepperList").eq($index-1).addClass("visited").removeClass("notvisited current");
+     $(".form").eq($index)
+          .fadeIn('slow');
+     if($(".stepperList").eq($index).hasClass("notvisited"))
+     {
+      $(".stepperList").eq($index).addClass("current"+' '+ settings.stepperprocesscolor).removeClass("notvisited");
+     }
+      }
+      $(".stepperList:nth-child(" + $index + ")").removeClass(settings.stepperprocesscolor);
+      $(".stepperList:nth-child(" + $index + ")").addClass(settings.steppercompletioncolor );
+    });
+  };
 })(jQuery);
+
+//current, notvisited, visited, disabled
