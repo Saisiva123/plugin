@@ -77,12 +77,12 @@
         font-size: 17px;
         width: 160px;
         position: absolute;
-        background-color: #e4ad66; }
+        background-color: #b49060; }
     * #container .pageButtons:last-child {
-      left: 77%; }
+      left: 72%; }
     * #container .pageButtons {
       position: relative;
-      padding: 5px;
+      padding: 15px;
       top: 90%;
       background-color: #116080;
       color: white; }
@@ -93,4 +93,4 @@
     * #container .visited {
       cursor: pointer; }
     * #container .notvisited {
-      cursor: pointer; }
+      cursor: not-allowed; }
