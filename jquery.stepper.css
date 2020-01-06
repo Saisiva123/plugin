@@ -14,8 +14,10 @@
       white-space: nowrap; }
     * #container .stepperList {
       display: inline-block;
+      margin-top: 10px;
       margin-left: 120px;
       font-size: 20px;
+      color: grey;
       outline: none;
       counter-increment: step; }
       * #container .stepperList:first-child {
@@ -32,23 +34,24 @@
         padding-left: 17px;
         border-radius: 50%;
         color: white; }
-      * #container .stepperList.shadowcolor:before {
-        filter: drop-shadow(2px 4px 6px black); }
-      * #container .stepperList.bgcolor:before {
+      * #container .stepperList.notvisited:before {
         background-color: grey; }
-      * #container .stepperList.bgcolor:after {
+      * #container .stepperList.notvisited:after {
         border: 2px solid grey; }
-      * #container .stepperList.completioncolor:before {
+      * #container .stepperList.visited:before {
         background-color: #76ec76; }
-      * #container .stepperList.completioncolor:after {
+      * #container .stepperList.visited:after {
         border: 2px solid #76ec76; }
-      * #container .stepperList.processcolor:before {
-        background-color: #5b75eb; }
+      * #container .stepperList.current:before {
+        background-color: #5b75eb;
+        filter: drop-shadow(2px 4px 6px black); }
+      * #container .stepperList.current:after {
+        border: 2px solid grey; }
       * #container .stepperList::after {
         content: "";
         width: 160px;
         position: fixed;
-        margin-left: -15px;
+        margin-left: -18px;
         z-index: -1;
         margin-top: -25px; }
       * #container .stepperList:last-child:after {
@@ -89,9 +92,5 @@
       top: 90%;
       background-color: #116080;
       color: white; }
-    * #container .current {
-      cursor: pointer; }
-    * #container .visited {
-      cursor: pointer; }
-    * #container .notvisited {
+    * #container .disabled {
       cursor: not-allowed; }

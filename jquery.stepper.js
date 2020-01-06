@@ -1,110 +1,158 @@
 (function ($) {
   $.fn.stepper = function (options) {
+    var pluginName = "stepperjs";
     var container = $(this);
     var settings = $.extend(
       {
-        stepperbgcolor: 'bgcolor',
-        steppercompletioncolor: 'completioncolor',
-        stepperprocesscolor: 'processcolor',
         steps: ['first', 'second', 'third', 'fourth'],
         stepButtonContent: ["o", "#", "$", "*"],
-        pagebuttons: ['Prev Page', 'Next Page'],
-        startingindex: '2'
+        pageButtons: ['Prev Page', 'Next Page'],
+        startingIndex: 1,
+        formSelectorClass: ".form",
+        disabledClass: "",
+        currentClass: "",
+        visitedClass: "",
+        notvisitedClass: ""
       },
       options
     );
-    //all varibles which been used
-    var buttons = $("input[type=submit],button,select");
-    var initialstep = settings.startingindex - 1;
-    $stepperMain = $("<ul></ul>").addClass("stepperBody");
-    container.prepend($stepperMain);
+
     $count = settings.steps.length;
+    $stepperMain = createStepperBody();
+    container.prepend($stepperMain);
+    initialstep = settings.startingIndex - 1;
+    var stateClasses={
+      current: "current " + settings.currentClass,
+    };
+    var stepperList = [];
+    var stepperListJQObj;
 
-    //set content,classes for lists and buttons
     for (i = 0; i < $count; i++) {
-      $stepperMain.append(createList(i));
+      stepperList.push(createStepperList(i));
     }
-    //list created and classes were added
-    function createList(i) {
-      return $("<li></li>").addClass('stepperList' + ' ' + settings.stepperbgcolor).text(settings.steps[i]).attr("content", settings.stepButtonContent[i]);
-    }
-
+    $stepperMain.append(stepperList);
+    stepperListJQObj = $(".stepperList");
+    
     for (i = 0; i < settings.pagebuttons.length; i++) {
-      container.append($("<button></button").text(settings.pagebuttons[i]).addClass("pageButtons"));
+      //correct this
+      //container.append(createButtonBody(i));
     }
-    container.children().not(".stepperBody,.pageButtons").addClass("form");
-    //initially notvisited 
-    for (i = initialstep; i < $count; i++) {
-      $(".stepperList").eq(i).addClass("notvisited");
-    }
-    //for active class
-    $(".stepperList").eq(initialstep).addClass("current" + ' ' + settings.stepperprocesscolor+' '+"shadowcolor").removeClass("notvisited");
-    $(".form").eq(initialstep).show();
-
-    //list click function
-    $(".stepperList").click(function () {
-      $num = $(this).index();
-     // $(this).addClass("current").removeClass("isnotvisited").siblings().removeClass("current");
-      if (($(this).hasClass("current") && $(this).prev().hasClass('visited')) || $(this).hasClass("visited")) {
-        $(".form").hide();
-        $(".form").eq($num).show();
-        $(".stepperList").eq($num).addClass("shadowcolor").siblings().removeClass("shadowcolor");
-      }
-    });
 
     $(".pageButtons").eq(0).click(function () {
-      $(".form").each(function () {
-        if ($(this).css("display") == "block") {
-          $index=$(this).index();
-          console.log
-          if ($(this).prevAll().length - 1 > 0) {
-            $(this).fadeOut().prev().fadeIn();
-            $(".stepperList").eq($index-2).addClass("shadowcolor").siblings().removeClass("shadowcolor");
-          }
-        }
-      });
+      clickpageButton(-1);
     });
     $(".pageButtons").eq(1).click(function () {
+      clickpageButton(0);
+    });
+    stepperListJQObj.click(function () {
+      $num = $(this).index();
+
+      if ($(this).hasClass("notvisited")) {
+      }else{
+        setAsCurrent($(this));
+
+        //correct this ...
+        // $(".form").hide();
+        // $(".form").eq($num).show();
+      }
+    });
+
+    function createStepperBody() {
+      return $("<ul></ul>").addClass("stepperBody").attr("data-stepper", pluginName);;
+    }
+    function createStepperList(i) {
+      return $("<li></li>").addClass('stepperList ' + getnotvisitedClass()).text(settings.steps[i]).attr("content", settings.stepButtonContent[i]);
+    }
+    function createButtonBody(i) {
+      return $("<button></button").text(settings.pagebuttons[i]).addClass("pageButtons").attr("data-stepper", pluginName);
+    }
+    function clickpageButton(i) {
       $(".form").each(function () {
-        $index=$(this).index();
         if ($(this).css("display") == "block") {
-          if ($(this).nextAll().length - 2 > 0)
-          {
-            $(this).fadeOut().next().fadeIn();
-            $(".stepperList").eq($index).addClass("shadowcolor").siblings().removeClass("shadowcolor");
-            return false;
+          $index = $(this).index() - 1;
+          console.log($index);
+          if (i == 0) {
+            goToNext($index + i);
           }
+          else {
+            if ($index > 0) {
+              $(".form").eq($index + i).fadeIn('slow');
+              setAsCurrent(stepperListJQObj.eq($index + i));
+              $(".form").eq($index).fadeOut('fast');
+              setAsnotvisited(stepperListJQObj.eq($index));
+            }
+          }
+          return false;
         }
       });
-    });
+    }
 
-
-    //when the buttons clicked
-
-    buttons.click(function () {
-      var buttonclick = $(this);
-      $index = buttonclick
-        .parents(".form")
-        .index();
-        console.log($index);
-
-      if ($index < $count) {
-        $(".form").eq($index - 1)
-          .fadeOut('fast');
-         
-        $(".stepperList").eq($index - 1).addClass("visited").removeClass("notvisited current shadowcolor");
-        $(".form").eq($index)
-          .fadeIn('slow');
-        if ($(".stepperList").eq($index).hasClass("notvisited")) {
-          $(".stepperList").eq($index).addClass("current shadowcolor" + ' ' + settings.stepperprocesscolor).removeClass("notvisited");
+    function goToNext(i) {
+      console.log(i);
+      if (i < $count - 1) {
+        $(".form").eq(i).fadeOut('fast');
+        setAsVisited(stepperListJQObj.eq(i));
+        $(".form").eq(i + 1).fadeIn('slow');
+        if (stepperListJQObj.eq(i + 1).hasClass("notvisited")) {
+          setAsCurrent(stepperListJQObj.eq(i + 1));
         }
       }
-      else if($index==$count)
-      {
-          $(".stepperList").eq($index-1).removeClass("current shadowcolor").addClass("visited");
+      if (i == $count - 1) {
+        setAsVisited(stepperListJQObj.eq(i));
       }
-      $(".stepperList:nth-child(" + $index + ")").removeClass(settings.stepperprocesscolor);
-      $(".stepperList:nth-child(" + $index +")").addClass(settings.steppercompletioncolor);
-    });
+    }
+
+    if ($(this).hasClass("current") != true) {
+      setAsCurrent(stepperListJQObj.eq(initialstep));
+      $(".form").eq(initialstep).show();
+    }
+
+    function setAsCurrent(ele) {
+      stepperListJQObj.removeClass(stateClasses.current);
+      ele.addClass(getcurrentClass())
+        .removeClass(getvisitedClass() + " " + getnotvisitedClass() + " " + getdisabledClass());
+    };
+    function setAsVisited(ele) {
+      ele.addClass(getvisitedClass())
+        .removeClass(getcurrentClass() + " " + getnotvisitedClass() + " " + getdisabledClass())
+    }
+    function setAsnotvisited(ele) {
+      ele.addClass(getnotvisitedClass())
+        .removeClass(getcurrentClass() + " " + getvisitedClass() + " " + getdisabledClass())
+    }
+    function setAsDisabled(ele) {
+      ele.addClass(getdisabledClass())
+        .removeClass(getcurrentClass() + " " + getnotvisitedClass() + " " + getvisitedClass())
+    }
+    function getdisabledClass() {
+      return "disabled " + settings.disabledClass;
+    }
+    // function getcurrentClass() {
+    //   return "current " + settings.currentClass;
+    // }
+    // function getvisitedClass() {
+    //   return "visited " + settings.visitedClass;
+    // };
+    // function getnotvisitedClass() {
+    //   return "notvisited " + settings.notvisitedClass;
+    // }
+
+    var retObj = {
+      thisObj: $(this),
+      goToNext: goToNext
+    };
+
+    return retObj;
   };
 })(jQuery);
+
+//var / let / const
+
+// u-d
+// disabled
+// u-c
+// current
+// u-n
+// notvisited
+// u-v
+// visited

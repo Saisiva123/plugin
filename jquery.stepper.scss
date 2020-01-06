@@ -1,9 +1,10 @@
+$containerWidth:700px;
 * {
   color: black;
   font-family: sans-serif;
 
   #container {
-    width: 700px;
+    width: $containerWidth;
     position: fixed;
     height: 550px;
     border-radius: 20px;
@@ -18,10 +19,13 @@
 
     .stepperList {
       display: inline-block;
+      margin-top:10px;
       margin-left: 120px;
       font-size: 20px;
+      color:grey;
       outline:none;
       counter-increment: step;
+  
 
       &:first-child {
         margin-left: 10px;
@@ -37,34 +41,36 @@
         padding: 10px;
         padding-left: 17px;
         border-radius: 50%;
+      
         color: white;
       }
-      &.shadowcolor:before
+      &.notvisited:before
       {
-        filter: drop-shadow(2px 4px 6px black);
-      }
-      &.bgcolor:before {
         background-color: grey;
       }
-      &.bgcolor:after {
+      &.notvisited:after
+      {
         border: 2px solid grey;
       }
-      &.completioncolor:before {
+      &.visited:before {
         background-color: rgb(118, 236, 118);
       }
-      &.completioncolor:after {
+      &.visited:after {
         border: 2px solid rgb(118, 236, 118);
       }
-
-      &.processcolor:before {
+      &.current:before {
         background-color: rgb(91, 117, 235);
+        filter: drop-shadow(2px 4px 6px black);
       }
-
+      &.current:after {
+        border: 2px solid grey; 
+      }
       &::after {
         content: "";
+        
         width: 160px;
         position: fixed;
-        margin-left: -15px;
+        margin-left: -18px;
         z-index: -1;
         margin-top: -25px;
       }
@@ -121,15 +127,10 @@
       background-color: rgb(17, 96, 128);
       color: white;
     }
-   
-    .current {
-      cursor: pointer;
-    }
-    .visited {
-      cursor: pointer;
-    }
-    .notvisited {
+    .disabled
+    {
       cursor: not-allowed;
     }
+    
   }
 }
