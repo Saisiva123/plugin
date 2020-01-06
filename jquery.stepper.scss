@@ -20,6 +20,7 @@
       display: inline-block;
       margin-left: 120px;
       font-size: 20px;
+      outline:none;
       counter-increment: step;
 
       &:first-child {
@@ -37,6 +38,10 @@
         padding-left: 17px;
         border-radius: 50%;
         color: white;
+      }
+      &.shadowcolor:before
+      {
+        filter: drop-shadow(2px 4px 6px black);
       }
       &.bgcolor:before {
         background-color: grey;
@@ -105,34 +110,25 @@
         }
       }
     }
-   
-   
-    .pageButtons:last-child
-    {
-      left:72%;
+
+    .pageButtons:last-child {
+      left: 72%;
     }
-    .pageButtons
-    {
+    .pageButtons {
       position: relative;
-      padding:15px;
-      top:90%;
+      padding: 15px;
+      top: 90%;
       background-color: rgb(17, 96, 128);
-      color:white;
+      color: white;
     }
-    .disabled
-    {
-      cursor: not-allowed;
-    }
-    .current
-    {
-        cursor: pointer;
-    }
-    .visited
-    {
+   
+    .current {
       cursor: pointer;
     }
-    .notvisited
-    {
+    .visited {
+      cursor: pointer;
+    }
+    .notvisited {
       cursor: not-allowed;
     }
   }

@@ -7,6 +7,6 @@ $(function () {
         steps: ['first', 'second', 'third','fourth'],
         stepButtonContent: ["o", "#", "$", "*"],
         pagebuttons:['Prev Page','Next Page'],
-        startingindex:'1'
+        startingindex:'2'
     });
 });

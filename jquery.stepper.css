@@ -16,6 +16,7 @@
       display: inline-block;
       margin-left: 120px;
       font-size: 20px;
+      outline: none;
       counter-increment: step; }
       * #container .stepperList:first-child {
         margin-left: 10px; }
@@ -31,6 +32,8 @@
         padding-left: 17px;
         border-radius: 50%;
         color: white; }
+      * #container .stepperList.shadowcolor:before {
+        filter: drop-shadow(2px 4px 6px black); }
       * #container .stepperList.bgcolor:before {
         background-color: grey; }
       * #container .stepperList.bgcolor:after {
@@ -86,8 +89,6 @@
       top: 90%;
       background-color: #116080;
       color: white; }
-    * #container .disabled {
-      cursor: not-allowed; }
     * #container .current {
       cursor: pointer; }
     * #container .visited {
