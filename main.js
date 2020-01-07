@@ -15,7 +15,7 @@ $(function () {
         notvisitedClass:""
     });
    
-     $("input").click(function()
+     $("input[type=submit").click(function()
      {
         $index=$(this).parents(".form").index();
    

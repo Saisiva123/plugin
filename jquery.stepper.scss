@@ -41,16 +41,12 @@ $containerWidth:700px;
         padding: 10px;
         padding-left: 17px;
         border-radius: 50%;
-      
+        background-color: grey;
         color: white;
       }
-      &.notvisited:before
+      &.notvisited::before
       {
-        background-color: grey;
-      }
-      &.notvisited:after
-      {
-        border: 2px solid grey;
+        cursor: not-allowed;
       }
       &.visited:before {
         background-color: rgb(118, 236, 118);
@@ -63,11 +59,11 @@ $containerWidth:700px;
         filter: drop-shadow(2px 4px 6px black);
       }
       &.current:after {
-        border: 2px solid grey; 
+        border: 2px solid rgb(91, 117, 235); 
       }
       &::after {
         content: "";
-        
+        border: 2px solid grey;
         width: 160px;
         position: fixed;
         margin-left: -18px;
@@ -117,10 +113,10 @@ $containerWidth:700px;
       }
     }
 
-    .pageButtons:last-child {
+    .stepperButton_1 {
       left: 72%;
     }
-    .pageButtons {
+    .stepperButton_0,.stepperButton_1 {
       position: relative;
       padding: 15px;
       top: 90%;

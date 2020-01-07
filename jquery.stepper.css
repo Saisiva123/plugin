@@ -33,11 +33,10 @@
         padding: 10px;
         padding-left: 17px;
         border-radius: 50%;
+        background-color: grey;
         color: white; }
-      * #container .stepperList.notvisited:before {
-        background-color: grey; }
-      * #container .stepperList.notvisited:after {
-        border: 2px solid grey; }
+      * #container .stepperList.notvisited::before {
+        cursor: not-allowed; }
       * #container .stepperList.visited:before {
         background-color: #76ec76; }
       * #container .stepperList.visited:after {
@@ -46,9 +45,10 @@
         background-color: #5b75eb;
         filter: drop-shadow(2px 4px 6px black); }
       * #container .stepperList.current:after {
-        border: 2px solid grey; }
+        border: 2px solid #5b75eb; }
       * #container .stepperList::after {
         content: "";
+        border: 2px solid grey;
         width: 160px;
         position: fixed;
         margin-left: -18px;
@@ -84,9 +84,9 @@
         width: 160px;
         position: absolute;
         background-color: #b49060; }
-    * #container .pageButtons:last-child {
+    * #container .stepperButton_1 {
       left: 72%; }
-    * #container .pageButtons {
+    * #container .stepperButton_0, * #container .stepperButton_1 {
       position: relative;
       padding: 15px;
       top: 90%;

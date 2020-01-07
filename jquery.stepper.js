@@ -21,39 +21,40 @@
     $stepperMain = createStepperBody();
     container.prepend($stepperMain);
     initialstep = settings.startingIndex - 1;
-    var stateClasses={
+    var stateClasses = {
+      disabled:"disabled "+settings.disabled,
       current: "current " + settings.currentClass,
+      visited: "visited " + settings.visitedClass,
+      notvisited: "notvisited " + settings.notvisitedClass
     };
     var stepperList = [];
     var stepperListJQObj;
+    var buttonList = [];
+
 
     for (i = 0; i < $count; i++) {
       stepperList.push(createStepperList(i));
     }
     $stepperMain.append(stepperList);
     stepperListJQObj = $(".stepperList");
-    
-    for (i = 0; i < settings.pagebuttons.length; i++) {
-      //correct this
-      //container.append(createButtonBody(i));
+    for (i = 0; i < settings.pageButtons.length; i++) {
+      buttonList.push(createStepperButton(i));
     }
+    container.append(buttonList);
+    
+    $(".stepperButton_0").click(function()
+    {clickpageButton(-1)});
+    $(".stepperButton_1").click(function()
+    {clickpageButton(0)});
 
-    $(".pageButtons").eq(0).click(function () {
-      clickpageButton(-1);
-    });
-    $(".pageButtons").eq(1).click(function () {
-      clickpageButton(0);
-    });
     stepperListJQObj.click(function () {
-      $num = $(this).index();
-
+      $num = $(this).attr("stepper-listindex");
       if ($(this).hasClass("notvisited")) {
-      }else{
+      } else {
+       
         setAsCurrent($(this));
-
-        //correct this ...
-        // $(".form").hide();
-        // $(".form").eq($num).show();
+         $(".form").hide();
+         $(".form").eq($num).show();
       }
     });
 
@@ -61,16 +62,17 @@
       return $("<ul></ul>").addClass("stepperBody").attr("data-stepper", pluginName);;
     }
     function createStepperList(i) {
-      return $("<li></li>").addClass('stepperList ' + getnotvisitedClass()).text(settings.steps[i]).attr("content", settings.stepButtonContent[i]);
+      return $("<li></li>").addClass('stepperList ' + stateClasses.notvisited).text(settings.steps[i]).attr("content", settings.stepButtonContent[i]).attr('stepper-listindex',i);
     }
-    function createButtonBody(i) {
-      return $("<button></button").text(settings.pagebuttons[i]).addClass("pageButtons").attr("data-stepper", pluginName);
+    function createStepperButton(i) {
+      return $("<button></button").text(settings.pagebuttons[i]).addClass("stepperButton_" + i).data("stepper", pluginName);
     }
+
     function clickpageButton(i) {
+      $index = $(".form").data('stepper-index');
       $(".form").each(function () {
         if ($(this).css("display") == "block") {
-          $index = $(this).index() - 1;
-          console.log($index);
+          $index = $(this).data('stepper-index');
           if (i == 0) {
             goToNext($index + i);
           }
@@ -79,8 +81,7 @@
               $(".form").eq($index + i).fadeIn('slow');
               setAsCurrent(stepperListJQObj.eq($index + i));
               $(".form").eq($index).fadeOut('fast');
-              setAsnotvisited(stepperListJQObj.eq($index));
-            }
+              }
           }
           return false;
         }
@@ -88,14 +89,11 @@
     }
 
     function goToNext(i) {
-      console.log(i);
       if (i < $count - 1) {
         $(".form").eq(i).fadeOut('fast');
         setAsVisited(stepperListJQObj.eq(i));
         $(".form").eq(i + 1).fadeIn('slow');
-        if (stepperListJQObj.eq(i + 1).hasClass("notvisited")) {
-          setAsCurrent(stepperListJQObj.eq(i + 1));
-        }
+        setAsCurrent(stepperListJQObj.eq(i + 1));
       }
       if (i == $count - 1) {
         setAsVisited(stepperListJQObj.eq(i));
@@ -109,33 +107,22 @@
 
     function setAsCurrent(ele) {
       stepperListJQObj.removeClass(stateClasses.current);
-      ele.addClass(getcurrentClass())
-        .removeClass(getvisitedClass() + " " + getnotvisitedClass() + " " + getdisabledClass());
+      ele.addClass(stateClasses.current)
+        .removeClass( stateClasses.notvisited + " " + stateClasses.disabled);
     };
     function setAsVisited(ele) {
-      ele.addClass(getvisitedClass())
-        .removeClass(getcurrentClass() + " " + getnotvisitedClass() + " " + getdisabledClass())
+      ele.addClass(stateClasses.visited)
+        .removeClass(stateClasses.current + " " + stateClasses.notvisited + " " + stateClasses.disabled);
     }
     function setAsnotvisited(ele) {
-      ele.addClass(getnotvisitedClass())
-        .removeClass(getcurrentClass() + " " + getvisitedClass() + " " + getdisabledClass())
+      ele.addClass(stateClasses.notvisited)
+        .removeClass(stateClasses.current + " " + stateClasses.visited + " " + stateClasses.disabled)
     }
     function setAsDisabled(ele) {
-      ele.addClass(getdisabledClass())
-        .removeClass(getcurrentClass() + " " + getnotvisitedClass() + " " + getvisitedClass())
+      ele.addClass(stateClasses.disabled)
+        .removeClass(stateClasses.current + " " + stateClasses.notvisited + " " + stateClasses.visited )
     }
-    function getdisabledClass() {
-      return "disabled " + settings.disabledClass;
-    }
-    // function getcurrentClass() {
-    //   return "current " + settings.currentClass;
-    // }
-    // function getvisitedClass() {
-    //   return "visited " + settings.visitedClass;
-    // };
-    // function getnotvisitedClass() {
-    //   return "notvisited " + settings.notvisitedClass;
-    // }
+ 
 
     var retObj = {
       thisObj: $(this),
