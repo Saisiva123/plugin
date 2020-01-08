@@ -1,13 +1,10 @@
 $(function () {
     var stepperObj = $("#container").stepper({
-        stepperbgcolor: 'bgcolor',
-        steppercompletioncolor: 'completioncolor',
-        stepperprocesscolor:'processcolor',
         //if new form is created the step has to be added.
-        steps: ['First', 'Second', 'Third','Fourth'],
-        stepButtonContent: ["o", "#", "$", "*"],
+        steps: ['Step1', 'Step2', 'Step3','Step4','Step5'],
+        stepButtonContent: ["o", "#", "$","#", "$"],
         pagebuttons:['Prev Page','Next Page'],
-        startingindex:1,
+        startingindex:0,
         formSelectorClass: "form",
         disabledClass:"",
         currentClass:"",
@@ -17,9 +14,8 @@ $(function () {
    
      $("input[type=submit").click(function()
      {
-        $index=$(this).parents(".form").index();
-   
-        stepperObj.goToNext($index-1);
+        stepperObj.goTo(1);
      })
-     stepperObj.thisObj;
+    //stepperObj.goTo(2);
+    //  stepperObj.thisObj;
 });

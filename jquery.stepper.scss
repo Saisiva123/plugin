@@ -1,4 +1,6 @@
-$containerWidth:700px;
+$containerWidth: 700px;
+$lengthofStepper: var(--width);
+
 * {
   color: black;
   font-family: sans-serif;
@@ -15,67 +17,84 @@ $containerWidth:700px;
       list-style-type: none;
       position: fixed;
       white-space: nowrap;
+
+      .step {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 20px;
+        color: grey;
+        outline: none;
+        margin-left: $lengthofStepper;
+        counter-increment: step;
+        font-size: 15px;
+        &:first-child {
+          margin-left: 10px;
+        }
+        &::before {
+          content: attr(content);
+          position: relative;
+          width: 10px;
+          height: 10px;
+          display: block;
+          margin-bottom: 5px;
+          padding: 16px;
+          line-height: 0.5;
+          border-radius: 50%;
+          background-color: grey;
+          color: white;
+        }
+        &.disabled {
+          cursor: not-allowed;
+        }
+        &.notvisited::before {
+          cursor: not-allowed;
+        }
+        &.notvisited:hover:before {
+          animation: shake 0.5s;
+          animation-iteration-count: infinite;
+        }
+        @keyframes shake {
+          0% {
+            transform: translateY(1px) rotate(0deg);
+          }
+          5% {
+            transform: translateY(-2px) rotate(-1deg);
+          }
+          10% {
+            transform: translateY(2px) rotate(0deg);
+          }
+          15% {
+            transform: translateY(1px) rotate(-1deg);
+          }
+        }
+        &.visited:before {
+          background-color: rgb(118, 236, 118);
+        }
+        &.stepperListWidth.visited:after {
+          border: 2px solid rgb(118, 236, 118);
+        }
+        &.current:before {
+          background-color: rgb(91, 117, 235);
+        }
+
+        &.active:before {
+          filter: drop-shadow(2px 4px 6px black);
+        }
+        &.stepperListWidth::after {
+          content: "";
+          width: $lengthofStepper;
+          border: 2px solid grey;
+          position: fixed;
+          margin-left: 2px;
+          z-index: -1;
+          margin-top: -25px;
+        }
+        &:last-child:after {
+          content: none;
+        }
+      }
     }
-
-    .stepperList {
-      display: inline-block;
-      margin-top:10px;
-      margin-left: 120px;
-      font-size: 20px;
-      color:grey;
-      outline:none;
-      counter-increment: step;
-  
-
-      &:first-child {
-        margin-left: 10px;
-      }
-      &::before {
-        content: attr(content);
-        position: relative;
-        width: 20px;
-        height: 20px;
-        display: block;
-        margin-bottom: 5px;
-        margin-left: 4px;
-        padding: 10px;
-        padding-left: 17px;
-        border-radius: 50%;
-        background-color: grey;
-        color: white;
-      }
-      &.notvisited::before
-      {
-        cursor: not-allowed;
-      }
-      &.visited:before {
-        background-color: rgb(118, 236, 118);
-      }
-      &.visited:after {
-        border: 2px solid rgb(118, 236, 118);
-      }
-      &.current:before {
-        background-color: rgb(91, 117, 235);
-        filter: drop-shadow(2px 4px 6px black);
-      }
-      &.current:after {
-        border: 2px solid rgb(91, 117, 235); 
-      }
-      &::after {
-        content: "";
-        border: 2px solid grey;
-        width: 160px;
-        position: fixed;
-        margin-left: -18px;
-        z-index: -1;
-        margin-top: -25px;
-      }
-
-      &:last-child:after {
-        content: none;
-      }
-    }
-    .form {
+    .slide {
       display: none;
       width: 100%;
       height: 70%;
@@ -112,21 +131,15 @@ $containerWidth:700px;
         }
       }
     }
-
-    .stepperButton_1 {
-      left: 72%;
-    }
-    .stepperButton_0,.stepperButton_1 {
+    .navigation {
       position: relative;
       padding: 15px;
       top: 90%;
       background-color: rgb(17, 96, 128);
       color: white;
+      &.next {
+        left: 72%;
+      }
     }
-    .disabled
-    {
-      cursor: not-allowed;
-    }
-    
   }
 }
