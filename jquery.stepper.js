@@ -1,6 +1,6 @@
 (function($) {
   $.fn.stepper = function(options) {
-    var container = $(this);
+    var container = $(this).addClass("ContainerBody");
     var pluginName = "stepperjs";
     var settings = $.extend(
       {
@@ -16,8 +16,9 @@
             class: ""
           }
         },
+        formClassName:".slide",
+        orientation:{vertical:true},
         startingIndex: 0,
-        formSelectorClass: ".form",
         disabledClass: "",
         currentClass: "",
         visitedClass: "",
@@ -29,17 +30,16 @@
 
     $count = settings.steps.length;
     var states = {
-      disabled: { class: "disabled" + " " + settings.disabled },
-      current: { class: "current" + " " + settings.currentClass },
-      visited: { class: "visited" + " " + settings.visitedClass },
-      notvisited: { class: "notvisited" + " " + settings.notvisitedClass },
-      active: { class: "active" + " " + settings.active }
+      disabled: { class: "disabled " + settings.disabled },
+      current: { class: "current " + settings.currentClass },
+      visited: { class: "visited " + settings.visitedClass },
+      notvisited: { class: "notvisited " + settings.notvisitedClass },
+      active: { class: "active " + settings.active }
     };
     var stepList = [];
     var stepJQObjList;
     var navigationBtns = [];
-    var stepperlength = parseInt(container.css("width")) / $count - 6 * $count;
-    var formJQObj = $(".slide");
+    var formJQObj=container.find(settings.formClassName).addClass("form");
 
     $stepperMain = createStepsContainer();
     for (i = 0; i < $count; i++) {
@@ -47,11 +47,15 @@
     }
     $stepperMain.append(stepList);
     container.prepend($stepperMain);
-
     stepJQObjList = $(".step");
-    //TODO: Do this through CSS not JS code
-    stepJQObjList.addClass("stepperListWidth");
-    $(".stepperListWidth").css("--width", stepperlength + "px");
+
+    if (settings.orientation.vertical) {
+      $stepperMain.addClass("vertical");
+    }
+    else
+    {
+      $stepperMain.addClass("horizontal");
+    }
 
     navigationBtns.push(
       $("<button/>")
@@ -66,43 +70,22 @@
         .on("click", goToNext)
     );
     container.append(navigationBtns);
-
     stepJQObjList.click(onStepClick);
 
-    goTo(settings.startingIndex);
+    goTo(settings.startingIndex, true,true);
 
-    function onStepClick() {
-      var thisObj = $(this);
-      if (thisObj.hasClass("notvisited") || thisObj.hasClass("disabled")) {
-        console.log("hey");
-        //TODO: trigger custom event here "clickedOnNotVisited"
-        NotAccessibleForm();
-      } else {
-        var idx = thisObj.attr("data-stepper-index");
-        console.log("hiii");
-        console.log(idx);
-        setAsActive(stepJQObjList.filter("[data-stepper-index = " + idx + "]"));
-        showForm(idx);
-      }
-    }
-    function NotAccessibleForm() {
-      throw "Requested form cant be accessed";
-    }
-
-    function getForm(idx) {
-      var form = $(".form[data-stepper-index=" + idx + "]");
-      console.log(form);
-      if (form.length) {
-        return form;
-      } else {
-        return formJQObj.eq(idx);
-      }
-    }
+    var retObj = {
+      thisObj: $(this),
+      goTo: goTo,
+      goToNext: goToNext
+    };
+    
     function createStepsContainer() {
       return $("<ul/>")
         .addClass("stepperBody")
         .attr("data-" + pluginName, true);
     }
+    //recurcive
     function createSteps(i) {
       return $("<li/>")
         .addClass("step " + states.notvisited.class)
@@ -110,89 +93,95 @@
         .attr("content", settings.stepButtonContent[i])
         .attr("data-stepper-index", i);
     }
-
-    function showForm(idx) {
-      if (idx < $count) {
-        formJQObj.hide();
-        getForm(idx).fadeIn("slow");
-      } else {
-        console.log("hello");
-        setAsActive(stepJQObjList.last());
-      }
-    }
-
-    //TOD: Add new GoTo function
-
-    function goToNext() {
-      var idx = stepJQObjList.filter(".active").attr("data-stepper-index");
-      idx=Number(idx);
-      if (idx < $count) {
-        var x=getIndex(1);
-        if(stepJQObjList.filter("[data-stepper-index = " + (idx+1) + "]").hasClass("notvisited"))
-       {
+    function onStepClick() {
+      var thisObj = $(this);
+      if (thisObj.hasClass("notvisited") || thisObj.hasClass("disabled")) {
         NotAccessibleForm();
-       }
-       else{
-        setAsActive(stepJQObjList.filter("[data-stepper-index = " + x + "]"));
-        showForm(x);
-       }
+      } else {
+        var idx = thisObj.attr("data-stepper-index");
+        setAsActive(stepJQObjList.filter("[data-stepper-index = " + idx + "]"));
+        showForm(idx);
       }
     }
-
-    function goToPrevious() {
-      var idx = stepJQObjList.filter(".active").prevAll().length;
+    function NotAccessibleForm() {
+      throw "Requested form cant be accessed";
+    }
+    function getForm(idx) {
       console.log(idx);
-      if (idx > 0) {
-        var x=getIndex(-1);
-        setAsActive(stepJQObjList.filter("[data-stepper-index = " + x + "]"));
-      showForm(x);
+      var form = $(".slide[data-stepper-index=" + idx + "]");
+      if (form.length) {
+        return form;
+      } else {
+        return formJQObj.eq(idx);
       }
     }
-
-    function goTo(dir) {
+    function showForm(idx) {
+      formJQObj.hide();
+      getForm(idx).fadeIn("slow");
+    }
+    function goToNext() {
+      var x = goTo(1, true);
+    }
+    function goToPrevious() {
+      goTo(-1, false);
+    }
+    function goTo(dir, toSetAsCurrent,finVisited) {
       dir = Number(dir);
       var idx = stepJQObjList.filter(".active").attr("data-stepper-index");
       idx = Number(idx || 0);
       idx = idx + 1 * dir;
-       setAsVisited(
-         stepJQObjList.filter("[data-stepper-index = " + (idx - 1) + "]")
-       );
-      setAsCurrent(stepJQObjList.filter("[data-stepper-index = " + idx + "]"));
-      showForm(idx);
-    
-    }
-    function getIndex(dir)
+      console.log(idx);
+    if(finVisited)
     {
-      dir = Number(dir);
-      var idx = stepJQObjList.filter(".active").attr("data-stepper-index");
-      idx = Number(idx || 0);
-      idx = idx + 1 * dir;
-      return idx;
+      finVisited=stepJQObjList.filter("[data-stepper-index = " + idx + "]").hasClass(states.visited.class);
     }
-
+      console.log(finVisited);
+      findNotVisited = stepJQObjList.filter("[data-stepper-index = " + idx + "]").hasClass(states.notvisited.class);
+      if (idx >= 0 && idx < $count) {
+        if (toSetAsCurrent || findNotVisited) {
+        if(finVisited)
+        {
+          setAsVisited(
+            stepJQObjList.filter("[data-stepper-index = " + (idx - 1) + "]")
+          );
+          setAsCurrent(
+            stepJQObjList.filter("[data-stepper-index = " + idx + "]")
+          );
+          showForm(idx);
+        }
+        } else {
+           setAsActive(stepJQObjList.filter("[data-stepper-index = " + idx + "]")
+           );
+          showForm(idx);
+        }
+      } else {
+        if (toSetAsCurrent) {
+          stepJQObjList
+            .filter("[data-stepper-index = " + (idx - 1) + "]")
+            .removeClass(states.current.class);
+        }
+      }
+    }
+    //states of slides
     function setAsActive(ele) {
       stepJQObjList.removeClass(states.active.class);
       ele
         .addClass(states.active.class)
         .removeClass(states.notvisited.class + " " + states.disabled.class);
-  
     }
     function setAsCurrent(ele) {
-      stepJQObjList.removeClass(states.current.class+" "+states.active.class);
+      stepJQObjList.removeClass(
+        states.active.class + " " + states.current.class
+      );
+      setAsVisited(ele);
       ele
-        .addClass(states.current.class+" "+states.active.class)
+        .addClass(states.current.class + " " + states.active.class)
         .removeClass(states.notvisited.class + " " + states.disabled.class);
     }
     function setAsVisited(ele) {
       ele
         .addClass(states.visited.class)
-        .removeClass(
-          states.notvisited.class +
-            " " +
-            states.disabled.class +
-            " " +
-            states.current.class
-        );
+        .removeClass(states.notvisited.class + " " + states.disabled.class);
     }
     function setAsnotvisited(ele) {
       ele
@@ -216,12 +205,6 @@
             states.active.class
         );
     }
-
-    var retObj = {
-      thisObj: $(this),
-      goTo: goTo,
-      goToNext: goToNext
-    };
 
     return retObj;
   };

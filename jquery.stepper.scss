@@ -1,11 +1,12 @@
 $containerWidth: 700px;
 $lengthofStepper: var(--width);
-
+$count: 4;
+$x: 42;
 * {
   color: black;
   font-family: sans-serif;
 
-  #container {
+  .ContainerBody {
     width: $containerWidth;
     position: fixed;
     height: 550px;
@@ -16,40 +17,42 @@ $lengthofStepper: var(--width);
     .stepperBody {
       list-style-type: none;
       position: fixed;
+      width: $containerWidth;
       white-space: nowrap;
+      &.verticaldesign {
+        margin-top: -35px;
+        transform: rotate(90deg);
+        transform-origin: 0% 0%;
+      }
 
       .step {
         display: inline-block;
-        margin-top: 10px;
         font-size: 20px;
         color: grey;
+        width: $containerWidth/$count;
         outline: none;
-        margin-left: $lengthofStepper;
         counter-increment: step;
         font-size: 15px;
         &:first-child {
-          margin-left: 10px;
+          margin-left: 0px;
         }
         &::before {
-          content: attr(content);
-          position: relative;
-          width: 10px;
-          height: 10px;
-          display: block;
-          margin-bottom: 5px;
-          padding: 16px;
-          line-height: 0.5;
-          border-radius: 50%;
-          background-color: grey;
-          color: white;
+          content: "";
+          width: $containerWidth/$count;
+          border: 2px solid grey;
+          position: fixed;
+          z-index: -1;
+          margin-top: 40px;
+          float: left;
+          margin-left: -($containerWidth/$count);
         }
         &.disabled {
           cursor: not-allowed;
         }
-        &.notvisited::before {
+        &.notvisited::after {
           cursor: not-allowed;
         }
-        &.notvisited:hover:before {
+        &.notvisited:active:after {
           animation: shake 0.5s;
           animation-iteration-count: infinite;
         }
@@ -67,34 +70,41 @@ $lengthofStepper: var(--width);
             transform: translateY(1px) rotate(-1deg);
           }
         }
-        &.visited:before {
+        &.visited:after {
           background-color: rgb(118, 236, 118);
         }
-        &.stepperListWidth.visited:after {
+        &.visited:before {
           border: 2px solid rgb(118, 236, 118);
         }
-        &.current:before {
+        // &.stepperListWidth.visited:after {
+        //   border: 2px solid rgb(118, 236, 118);
+        // }
+        &.current:after {
           background-color: rgb(91, 117, 235);
         }
 
-        &.active:before {
+        &.active:after {
           filter: drop-shadow(2px 4px 6px black);
         }
-        &.stepperListWidth::after {
-          content: "";
-          width: $lengthofStepper;
-          border: 2px solid grey;
-          position: fixed;
-          margin-left: 2px;
-          z-index: -1;
-          margin-top: -25px;
+        &::after {
+          content: attr(content);
+          position: relative;
+          width: 10px;
+          height: 10px;
+          display: block;
+          margin-top: 5px;
+          padding: 16px;
+          line-height: 0.5;
+          border-radius: 50%;
+          background-color: grey;
+          color: white;
         }
-        &:last-child:after {
-          content: none;
+        &:first-child:before {
+          display: none;
         }
       }
     }
-    .slide {
+    .form {
       display: none;
       width: 100%;
       height: 70%;

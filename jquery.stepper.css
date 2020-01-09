@@ -1,45 +1,46 @@
 * {
   color: black;
   font-family: sans-serif; }
-  * #container {
+  * .ContainerBody {
     width: 700px;
     position: fixed;
     height: 550px;
     border-radius: 20px;
     left: 20%;
     background-color: #e7e4b8; }
-    * #container .stepperBody {
+    * .ContainerBody .stepperBody {
       list-style-type: none;
       position: fixed;
+      width: 700px;
       white-space: nowrap; }
-      * #container .stepperBody .step {
+      * .ContainerBody .stepperBody.verticaldesign {
+        margin-top: -35px;
+        transform: rotate(90deg);
+        transform-origin: 0% 0%; }
+      * .ContainerBody .stepperBody .step {
         display: inline-block;
-        margin-top: 10px;
         font-size: 20px;
         color: grey;
+        width: 175px;
         outline: none;
-        margin-left: var(--width);
         counter-increment: step;
         font-size: 15px; }
-        * #container .stepperBody .step:first-child {
-          margin-left: 10px; }
-        * #container .stepperBody .step::before {
-          content: attr(content);
-          position: relative;
-          width: 10px;
-          height: 10px;
-          display: block;
-          margin-bottom: 5px;
-          padding: 16px;
-          line-height: 0.5;
-          border-radius: 50%;
-          background-color: grey;
-          color: white; }
-        * #container .stepperBody .step.disabled {
+        * .ContainerBody .stepperBody .step:first-child {
+          margin-left: 0px; }
+        * .ContainerBody .stepperBody .step::before {
+          content: "";
+          width: 175px;
+          border: 2px solid grey;
+          position: fixed;
+          z-index: -1;
+          margin-top: 40px;
+          float: left;
+          margin-left: -175px; }
+        * .ContainerBody .stepperBody .step.disabled {
           cursor: not-allowed; }
-        * #container .stepperBody .step.notvisited::before {
+        * .ContainerBody .stepperBody .step.notvisited::after {
           cursor: not-allowed; }
-        * #container .stepperBody .step.notvisited:hover:before {
+        * .ContainerBody .stepperBody .step.notvisited:active:after {
           animation: shake 0.5s;
           animation-iteration-count: infinite; }
 
@@ -52,44 +53,48 @@
     transform: translateY(2px) rotate(0deg); }
   15% {
     transform: translateY(1px) rotate(-1deg); } }
-        * #container .stepperBody .step.visited:before {
+        * .ContainerBody .stepperBody .step.visited:after {
           background-color: #76ec76; }
-        * #container .stepperBody .step.stepperListWidth.visited:after {
+        * .ContainerBody .stepperBody .step.visited:before {
           border: 2px solid #76ec76; }
-        * #container .stepperBody .step.current:before {
+        * .ContainerBody .stepperBody .step.current:after {
           background-color: #5b75eb; }
-        * #container .stepperBody .step.active:before {
+        * .ContainerBody .stepperBody .step.active:after {
           filter: drop-shadow(2px 4px 6px black); }
-        * #container .stepperBody .step.stepperListWidth::after {
-          content: "";
-          width: var(--width);
-          border: 2px solid grey;
-          position: fixed;
-          margin-left: 2px;
-          z-index: -1;
-          margin-top: -25px; }
-        * #container .stepperBody .step:last-child:after {
-          content: none; }
-    * #container .slide {
+        * .ContainerBody .stepperBody .step::after {
+          content: attr(content);
+          position: relative;
+          width: 10px;
+          height: 10px;
+          display: block;
+          margin-top: 5px;
+          padding: 16px;
+          line-height: 0.5;
+          border-radius: 50%;
+          background-color: grey;
+          color: white; }
+        * .ContainerBody .stepperBody .step:first-child:before {
+          display: none; }
+    * .ContainerBody .form {
       display: none;
       width: 100%;
       height: 70%;
       bottom: 0px;
       position: absolute; }
-      * #container .slide label {
+      * .ContainerBody .form label {
         font-size: 20px;
         float: left;
         margin-top: 10px;
         position: relative;
         left: 10%; }
-      * #container .slide input[type="text"] {
+      * .ContainerBody .form input[type="text"] {
         width: 250px;
         border-radius: 5px;
         padding: 5px;
         float: right;
         position: relative;
         right: 10%; }
-      * #container .slide input[type="submit"] {
+      * .ContainerBody .form input[type="submit"] {
         text-align: center;
         bottom: 20%;
         height: 40px;
@@ -98,11 +103,11 @@
         width: 160px;
         position: absolute;
         background-color: #b49060; }
-    * #container .navigation {
+    * .ContainerBody .navigation {
       position: relative;
       padding: 15px;
       top: 90%;
       background-color: #116080;
       color: white; }
-      * #container .navigation.next {
+      * .ContainerBody .navigation.next {
         left: 72%; }
