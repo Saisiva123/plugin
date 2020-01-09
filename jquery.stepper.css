@@ -3,7 +3,7 @@
   font-family: sans-serif; }
   * .ContainerBody {
     width: 700px;
-    position: fixed;
+    position: relative;
     height: 550px;
     border-radius: 20px;
     left: 20%;
@@ -13,10 +13,18 @@
       position: fixed;
       width: 700px;
       white-space: nowrap; }
-      * .ContainerBody .stepperBody.verticaldesign {
-        margin-top: -35px;
-        transform: rotate(90deg);
-        transform-origin: 0% 0%; }
+      * .ContainerBody .stepperBody.vertical {
+        margin-top: 65px;
+        transform: rotate(90deg) scaleX(0.9);
+        transform-origin: 13% 0%; }
+      * .ContainerBody .stepperBody.vertical + .form {
+        right: 0%;
+        bottom: 15%; }
+      * .ContainerBody .stepperBody.vertical > .step {
+        width: 137.5px; }
+      * .ContainerBody .stepperBody.vertical > .step::before {
+        width: 137.5px;
+        margin-left: -137.5px; }
       * .ContainerBody .stepperBody .step {
         display: inline-block;
         font-size: 20px;
@@ -77,16 +85,16 @@
           display: none; }
     * .ContainerBody .form {
       display: none;
-      width: 100%;
+      width: 80%;
       height: 70%;
-      bottom: 0px;
+      right: 10%;
+      bottom: 0%;
       position: absolute; }
       * .ContainerBody .form label {
         font-size: 20px;
         float: left;
-        margin-top: 10px;
-        position: relative;
-        left: 10%; }
+        margin-top: 13px;
+        position: relative; }
       * .ContainerBody .form input[type="text"] {
         width: 250px;
         border-radius: 5px;

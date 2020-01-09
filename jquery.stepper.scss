@@ -1,15 +1,15 @@
 $containerWidth: 700px;
-$lengthofStepper: var(--width);
-$count: 4;
-$x: 42;
+$containerHeight:550px;
+$count:4;
+$content:attr(content);
 * {
   color: black;
   font-family: sans-serif;
 
   .ContainerBody {
     width: $containerWidth;
-    position: fixed;
-    height: 550px;
+    position: relative;
+    height: $containerHeight;
     border-radius: 20px;
     left: 20%;
     background-color: rgb(231, 228, 184);
@@ -19,17 +19,31 @@ $x: 42;
       position: fixed;
       width: $containerWidth;
       white-space: nowrap;
-      &.verticaldesign {
-        margin-top: -35px;
-        transform: rotate(90deg);
-        transform-origin: 0% 0%;
+      
+      &.vertical {
+        margin-top: 65px;
+        transform: rotate(90deg) scaleX(0.9);
+        transform-origin: 13% 0%;
+      }
+      &.vertical + .form{
+        right: 0%;
+        bottom: 15%;
+      }
+      &.vertical > .step
+      {
+        width:$containerHeight/$count;
+      }
+      &.vertical >.step::before
+      {
+        width:$containerHeight/$count;
+        margin-left:-($containerHeight/$count);
       }
 
       .step {
         display: inline-block;
         font-size: 20px;
         color: grey;
-        width: $containerWidth/$count;
+        width:$containerWidth/$count;
         outline: none;
         counter-increment: step;
         font-size: 15px;
@@ -87,7 +101,7 @@ $x: 42;
           filter: drop-shadow(2px 4px 6px black);
         }
         &::after {
-          content: attr(content);
+          content: $content;
           position: relative;
           width: 10px;
           height: 10px;
@@ -106,19 +120,18 @@ $x: 42;
     }
     .form {
       display: none;
-      width: 100%;
+      width: 80%;
       height: 70%;
-      bottom: 0px;
+      right: 10%;
+      bottom: 0%;
       position: absolute;
 
       label {
         font-size: 20px;
         float: left;
-        margin-top: 10px;
+        margin-top: 13px;
         position: relative;
-        left: 10%;
       }
-
       input {
         &[type="text"] {
           width: 250px;

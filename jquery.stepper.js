@@ -16,8 +16,8 @@
             class: ""
           }
         },
-        formClassName:".slide",
-        orientation:{vertical:true},
+        formClassName: ".slide",
+        orientation: { vertical: true },
         startingIndex: 0,
         disabledClass: "",
         currentClass: "",
@@ -36,24 +36,20 @@
       notvisited: { class: "notvisited " + settings.notvisitedClass },
       active: { class: "active " + settings.active }
     };
+
     var stepList = [];
     var stepJQObjList;
     var navigationBtns = [];
-    var formJQObj=container.find(settings.formClassName).addClass("form");
-
+    var formJQObj = container.find(settings.formClassName).addClass("form");
     $stepperMain = createStepsContainer();
-    for (i = 0; i < $count; i++) {
-      stepList.push(createSteps(i));
-    }
+    createSteps(0); 
     $stepperMain.append(stepList);
     container.prepend($stepperMain);
     stepJQObjList = $(".step");
 
     if (settings.orientation.vertical) {
       $stepperMain.addClass("vertical");
-    }
-    else
-    {
+    } else {
       $stepperMain.addClass("horizontal");
     }
 
@@ -72,26 +68,29 @@
     container.append(navigationBtns);
     stepJQObjList.click(onStepClick);
 
-    goTo(settings.startingIndex, true,true);
+    goTo(settings.startingIndex, true);
 
     var retObj = {
       thisObj: $(this),
       goTo: goTo,
       goToNext: goToNext
     };
-    
+
     function createStepsContainer() {
       return $("<ul/>")
         .addClass("stepperBody")
-        .attr("data-" + pluginName, true);
+        .attr("data-" + pluginName, true).css("--count",$count);
     }
-    //recurcive
     function createSteps(i) {
-      return $("<li/>")
+      if(i<$count)
+      {
+        stepList.push($("<li/>")
         .addClass("step " + states.notvisited.class)
         .text(settings.steps[i])
         .attr("content", settings.stepButtonContent[i])
-        .attr("data-stepper-index", i);
+        .attr("data-stepper-index", i));
+        createSteps(i+1);
+      }
     }
     function onStepClick() {
       var thisObj = $(this);
@@ -123,41 +122,43 @@
       var x = goTo(1, true);
     }
     function goToPrevious() {
-      goTo(-1, false);
+      goTo(-1,false);
     }
-    function goTo(dir, toSetAsCurrent,finVisited) {
+    function goTo(dir, toSetAsCurrent) {
       dir = Number(dir);
       var idx = stepJQObjList.filter(".active").attr("data-stepper-index");
       idx = Number(idx || 0);
       idx = idx + 1 * dir;
-      console.log(idx);
-    if(finVisited)
-    {
-      finVisited=stepJQObjList.filter("[data-stepper-index = " + idx + "]").hasClass(states.visited.class);
-    }
-      console.log(finVisited);
-      findNotVisited = stepJQObjList.filter("[data-stepper-index = " + idx + "]").hasClass(states.notvisited.class);
+      findVisited = stepJQObjList
+        .filter("[data-stepper-index = " + idx  + "]").hasClass("visited");
       if (idx >= 0 && idx < $count) {
-        if (toSetAsCurrent || findNotVisited) {
-        if(finVisited)
-        {
-          setAsVisited(
-            stepJQObjList.filter("[data-stepper-index = " + (idx - 1) + "]")
-          );
-          setAsCurrent(
+        if (toSetAsCurrent) {
+          if (findVisited) {
+            setAsActive(
+              stepJQObjList.filter("[data-stepper-index = " + idx + "]")
+            );
+            showForm(idx);
+          }
+          else
+          {
+            setAsVisited(
+              stepJQObjList.filter("[data-stepper-index = " + (idx - 1) + "]")
+            );
+            setAsCurrent(
+              stepJQObjList.filter("[data-stepper-index = " + idx + "]")
+            );
+            showForm(idx);  
+          }
+        } else {
+          setAsActive(
             stepJQObjList.filter("[data-stepper-index = " + idx + "]")
           );
-          showForm(idx);
-        }
-        } else {
-           setAsActive(stepJQObjList.filter("[data-stepper-index = " + idx + "]")
-           );
           showForm(idx);
         }
       } else {
         if (toSetAsCurrent) {
           stepJQObjList
-            .filter("[data-stepper-index = " + (idx - 1) + "]")
+            .filter("[data-stepper-index = " + (idx-1) + "]")
             .removeClass(states.current.class);
         }
       }

@@ -1,8 +1,8 @@
 $(function() {
   var stepperObj = $("#container").stepper({
     //if new form is created the step has to be added.
-    steps: ["step 1", "step 2", "step 3", "step 4"],
-    stepButtonContent: ["1", "#", "$", "%"],
+    steps: ["step 1", "step 2", "step 3","step 4"],
+    stepButtonContent: ["1", "#", "$","&"],
     navigation: {
       previous: {
         text: "Prev Page",
